@@ -34,7 +34,6 @@ export class CursorController {
       originHost,
     });
   }
-
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.cursorService.findOne(id);
