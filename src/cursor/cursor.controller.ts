@@ -1,8 +1,20 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  Req,
+} from '@nestjs/common';
 import { CursorService } from './cursor.service';
 import { CreateCursorDto } from './dto/create-cursor.dto';
 import { UpdateCursorDto } from './dto/update-cursor.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { Request } from 'express';
+import { PaginationQuery } from 'src/core/pagination/pagination';
 
 @Controller('cursor')
 @ApiTags('Cursor')
@@ -15,8 +27,12 @@ export class CursorController {
   }
 
   @Get()
-  findAll() {
-    return this.cursorService.findAll();
+  findAll(@Query() paginationQuery: PaginationQuery, @Req() req: Request) {
+    const originHost = `${req.protocol}://${req.get('Host')}${req.originalUrl}`;
+    return this.cursorService.findAll({
+      ...paginationQuery,
+      originHost,
+    });
   }
 
   @Get(':id')
