@@ -11,10 +11,11 @@ async function bootstrap() {
     }),
   );
   const config = new DocumentBuilder()
-    .setTitle('Cats example')
-    .setDescription('The cats API description')
+    .setTitle('Custom Cursor')
+    .setDescription('The custom cursors API description')
     .setVersion('1.0')
-    .addTag('cats')
+    .addBearerAuth()
+    .addTag('custom cursors')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

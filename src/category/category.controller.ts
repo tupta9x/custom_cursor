@@ -12,13 +12,14 @@ import {
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { PaginationQuery } from 'src/core/pagination/pagination';
 import { Request } from 'express';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('category')
+@ApiBearerAuth()
 @ApiTags('Category')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
@@ -52,7 +53,7 @@ export class CategoryController {
     return this.categoryService.update(id, updateCategoryDto);
   }
 
-  @UseGuards(AuthGuard)
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.categoryService.remove(id);
