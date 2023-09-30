@@ -3,7 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { BookModule } from './book/book.module';
+import { CategoryModule } from './category/category.module';
+import { CursorModule } from './cursor/cursor.module';
 
 @Module({
   imports: [
@@ -12,7 +13,8 @@ import { BookModule } from './book/book.module';
       isGlobal: true,
     }),
     MongooseModule.forRoot(process.env.DB_URI),
-    BookModule,
+    CategoryModule,
+    CursorModule,
   ],
   controllers: [AppController],
   providers: [AppService],

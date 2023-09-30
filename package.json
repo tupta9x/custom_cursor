@@ -23,11 +23,15 @@
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^9.0.0",
+    "@nestjs/mapped-types": "*",
     "@nestjs/mongoose": "^9.2.1",
     "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/swagger": "^7.1.12",
     "mongoose": "^6.8.3",
+    "nestjs-keyset-paginator": "^3.0.4",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.2.0"
+    "rxjs": "^7.2.0",
+    "uuidv4": "^6.2.13"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
