@@ -17,7 +17,7 @@ import { Category } from 'src/category/schema/category.schema';
 export class CursorService {
   constructor(@InjectModel(Cursor.name) private cursorModel: Model<Cursor>) {}
   // async onModuleInit() {
-  //   const initData: CreateCursorDto[] = [
+  //   const initData: CreateCursorDto[] = [s
   //     {
   //       name: 'naruto',
   //       cursor:'base64',
