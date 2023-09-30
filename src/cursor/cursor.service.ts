@@ -32,7 +32,7 @@ export class CursorService {
   // }
 
   async create(createCursorDto: CreateCursorDto): Promise<Cursor> {
-    const res = this.cursorModel.create(createCursorDto).populate('category')
+    const res = this.cursorModel.create(createCursorDto);
     return res;
   }
 

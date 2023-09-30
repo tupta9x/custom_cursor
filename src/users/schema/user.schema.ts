@@ -1,11 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { Role } from 'src/enums/role.enum';
 import { v4 as uuidv4 } from 'uuid';
 
 @Schema({
   timestamps: true,
 })
-export class Category extends Document {
+export class User extends Document {
   @Prop({
     type: String,
     default: function genUUID() {
@@ -15,6 +16,12 @@ export class Category extends Document {
   _id: string;
 
   @Prop()
-  name: string;
+  username: string;
+
+  @Prop()
+  password: string;
+
+  @Prop()
+  roles: Role[];
 }
-export const CategorySchema = SchemaFactory.createForClass(Category);
+export const UserSchema = SchemaFactory.createForClass(User);
