@@ -103,7 +103,7 @@ export class CategoryService implements OnModuleInit {
     const category = this.categoryModel.findById(id);
 
     if (!category) {
-      throw new NotFoundException('Book not found.');
+      throw new NotFoundException('Category not found.');
     }
 
     return category;

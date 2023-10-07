@@ -5,6 +5,8 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Role } from '../enums/role.enum';
+import { PaginationQuery, PaginationQueryResult, PaginationQueryResultLink, PaginationQueryResultMeta } from 'src/core/pagination/pagination';
+import { filterOption, replaceHost } from 'src/utils/pagination.utils';
 
 require('dotenv').config();
 
@@ -36,9 +38,63 @@ export class UsersService {
     return res;
   }
 
-  async findAll(): Promise<User[]> {
-    const users = this.userModel.find();
-    return users;
+  async findAll(paginationQuery: PaginationQuery,): Promise<PaginationQueryResult<User>> {
+    let filters = {};
+    if (paginationQuery.filters) {
+      paginationQuery.filters.map((filter) => {
+        const getFilterOption = filterOption(
+          filter.field,
+          filter.operator,
+          filter.value,
+        );
+        filters = { ...filters, ...getFilterOption };
+      });
+    }
+    const { page, limit } = paginationQuery;
+    const users = this.userModel
+      .find(filters)
+      .skip((page - 1) * limit)
+      .limit(limit);
+    const count = await this.userModel.count(filters);
+    const totalPage = Math.ceil(count / limit);
+    const meta: PaginationQueryResultMeta = {
+      page: page,
+      limit: limit,
+      totalItems: count,
+      totalPages: totalPage,
+    };
+    const link: PaginationQueryResultLink = {
+      ...(page > 1 && {
+        first: replaceHost(paginationQuery.originHost, {
+          page: 1,
+          limit: limit,
+        }),
+      }),
+      ...(page > 1 && {
+        previous: replaceHost(paginationQuery.originHost, {
+          page: page - 1,
+          limit: limit,
+        }),
+      }),
+      ...(page < totalPage && {
+        next: replaceHost(paginationQuery.originHost, {
+          page: page + 1,
+          limit: limit,
+        }),
+      }),
+      ...(page < totalPage && {
+        last: replaceHost(paginationQuery.originHost, {
+          page: totalPage,
+          limit: limit,
+        }),
+      }),
+    };
+    const paginated: PaginationQueryResult<User> = {
+      data: await users,
+      meta: meta,
+      link: link,
+    };
+    return paginated;
   }
 
   async findOne(id: string): Promise<User | undefined> {

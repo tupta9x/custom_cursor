@@ -6,34 +6,40 @@ import {
   Patch,
   Param,
   Delete,
-  HttpCode,
+  Query,
+  Req,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { PaginationQuery } from 'src/core/pagination/pagination';
 import { UseGuards } from '@nestjs/common';
+import { Request } from 'express';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { Roles } from 'src/role/roles.decorator';
 import { Role } from 'src/enums/role.enum';
 
 @Controller('user')
-@UseGuards(AuthGuard)
-@ApiBearerAuth()
+// @UseGuards(AuthGuard)
+// @ApiBearerAuth()
 @ApiTags('User')
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
   
   @Post()
-  @Roles(Role.Admin)
+  // @Roles(Role.Admin)
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
 
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  findAll(@Query() paginationQuery: PaginationQuery, @Req() req: Request) {
+    const originHost = `${req.protocol}://${req.get('Host')}${req.originalUrl}`;
+    return this.userService.findAll({
+      ...paginationQuery,
+      originHost,});
   }
 
   @Get(':id')
@@ -47,7 +53,7 @@ export class UsersController {
   }
 
   @Patch(':id')
-  @Roles(Role.Admin)
+  // @Roles(Role.Admin)
   update(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
@@ -56,8 +62,7 @@ export class UsersController {
   }
 
   @Delete(':id')
-  @Roles(Role.Admin)
-  @HttpCode(204)
+  // @Roles(Role.Admin)
   remove(@Param('id') id: string) {
     return this.userService.remove(id);
   }

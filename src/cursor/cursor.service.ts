@@ -11,7 +11,6 @@ import {
   PaginationQueryResultMeta,
 } from 'src/core/pagination/pagination';
 import { filterOption, replaceHost } from 'src/utils/pagination.utils';
-import { Category } from 'src/category/schema/category.schema';
 
 @Injectable()
 export class CursorService {
