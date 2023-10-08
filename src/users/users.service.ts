@@ -7,6 +7,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Role } from '../enums/role.enum';
 import { PaginationQuery, PaginationQueryResult, PaginationQueryResultLink, PaginationQueryResultMeta } from 'src/core/pagination/pagination';
 import { filterOption, replaceHost } from 'src/utils/pagination.utils';
+import { hashPassword } from 'src/utils/password';
 
 require('dotenv').config();
 
@@ -34,7 +35,8 @@ export class UsersService {
     if(user) {
       throw new NotFoundException('User already existed.');
     }
-    const res = this.userModel.create({...createUserDto, roles:[Role.User]});
+    createUserDto.password = await hashPassword(createUserDto.password);
+    const res = await this.userModel.create({...createUserDto, roles:[Role.User]});
     return res;
   }
 
